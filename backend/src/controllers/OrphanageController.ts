@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+	import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import Orphanage from '../models/Orphanage';
 import orphanageView from '../views/orphanages_view';
@@ -30,7 +30,7 @@ export default {
             about,
             instructions,
             opening_hours,
-            open_on_weekends,
+            open_on_weekends : open_on_weekends === 'true',
             images,
         }
         

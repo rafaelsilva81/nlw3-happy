@@ -1,38 +1,30 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom';
-import { Map, TileLayer } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 
-import 'leaflet/dist/leaflet.css';
 import '../styles/pages/orphanages-map.css';
 import mapMarkerImg from '../images/Local.svg';
-import { FiPlus, FiSliders } from 'react-icons/fi';
+import { FiArrowRight, FiPlus} from 'react-icons/fi';
 
+import mapIcon from '../utils/mapIcon';
+import api from '../services/api';
 
-export default class OrphanagesMap extends React.Component {
-    state = {
-        index : 0,
-        themes : ['light-v10', 'dark-v10', 'satellite-v9', 'streets-v11'],
-    }
+interface Orphanage {
+    id : number;
+    latitude : number;
+    longitude : number;
+    name : string;
+}
 
-    handleChangeTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
-        const {index} = this.state;
-        e.preventDefault();
+export default function OrphanagesMap() {
+        const [orphanages, setOrphanages] = useState<Orphanage[]>([]);
 
-        if (index > 2) {
-            this.setState({
-                index : 0
-            })
-        } else {
-            this.setState({
-                index : index + 1
-            })
-        }
+        useEffect(() => {
+            api.get('orphanages').then(response => {
+                setOrphanages(response.data);
+            });
+        }, []);
 
-    }
-
-    render() {
-        const {index, themes} = this.state;
-        const current_theme = themes[index];
         return (
             <div id="page-map">
                 <aside>
@@ -51,23 +43,42 @@ export default class OrphanagesMap extends React.Component {
 
                 <Map
                     center={[-6.351498, -39.3020409]}
-                    zoom={15}
+                    zoom={16}
                     style={{ width: '100%', height: '100%' }}
                 //Dois parenteses um pra indicar codigo JSX outro pra indicar Objeto
                 >
                     { /* <TileLayer url="https://a.tile.openstreetmap.org/{z}/{x}/{y}.png" /> */}
                     <TileLayer
-                        url={`https://api.mapbox.com/styles/v1/mapbox/${current_theme}/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`} />
+                        url={`https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`} 
+                    />
+
+                    {orphanages.map(orphanage => {
+                        return (
+                            <Marker
+                                icon={mapIcon}
+                                position={[orphanage.latitude, orphanage.longitude]}
+                                key={orphanage.id}
+                            >
+                                <Popup closeButton={false} minWidth={240} maxWidth={240} className="map-popup">
+                                    <span> {orphanage.name} </span>
+                                    <Link to={`/orphanages/${orphanage.id}`}>
+                                        <FiArrowRight size={20} color="#fff" />
+                                    </Link>
+                                </Popup>
+                            </Marker>
+
+                        )
+                    })}
                 </Map>
 
-                <Link to="" className='create-orphanage'>
+                <Link to="/orphanages/create" className='create-orphanage'>
                     <FiPlus size={32} color="#fff" />
                 </Link>
 
-                <button className='change-theme' onClick={(e) => this.handleChangeTheme(e)}>
+                {/* <button className='change-theme' onClick={(e) => this.handleChangeTheme(e)}>
                     <FiSliders size={28} color="#fff"></FiSliders>
-                </button>
+                </button> */}
             </div>
         )
     }
-}
+
