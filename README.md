@@ -5,7 +5,9 @@ Projeto social Web/Mobile que lista e traz informações sobre orfanatos próxim
 
 ## :globe_with_meridians: Web : 
 ![Printscreen - Landing Page](https://i.imgur.com/wzP6qet.png)
-![Printscreen - Map Page](https://i.imgur.com/3Nbta7Y.png)
+![Printscreen - Map Page](https://i.imgur.com/BtH6PjL.png)
+![Printscreen - Create Orphanage Page](https://i.imgur.com/A1vaYSu.png)
+![Printscreen - Orphanage Detail Page](https://i.imgur.com/BtH6PjL.png)
 
 ## :iphone: Mobile : 
-Em desenvolvimento...
+![Printscreen - Mobile Map Page](https://i.imgur.com/hID7kBo.jpg)
